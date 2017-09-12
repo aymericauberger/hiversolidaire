@@ -30,5 +30,4 @@ fr:
     success:
       account_updated: "Vos informations ont été mises à jour."
     errors:
-      facebook_user_exists: "Ce compte Facebook est déjà lié à un autre compte Musicae."
-
+      facebook_user_exists: "Ce compte Facebook est déjà lié à un autre compte."
