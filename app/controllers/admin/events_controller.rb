@@ -48,24 +48,24 @@ class Admin::EventsController < Admin::BaseController
 
   def custom_action
     (11..31).each do |i|
-      Event.create!(event_type: 'Diner', start_date: Date.new(2016, 12, i))
-      Event.create!(event_type: 'Nuit', start_date: Date.new(2016, 12, i))
-      Event.create!(event_type: 'Petit-dejeuner', start_date: Date.new(2016, 12, i))
-      Event.create!(event_type: 'Menage', start_date: Date.new(2016, 12, i)) if l(Date.new(2016, 12, i), format: '%A') == 'samedi'
+      Event.create!(event_type: 'Diner', start_date: Date.new(2017, 8, i))
+      Event.create!(event_type: 'Nuit', start_date: Date.new(2017, 8, i))
+      Event.create!(event_type: 'Petit-dejeuner', start_date: Date.new(2017, 8, i))
+      Event.create!(event_type: 'Menage', start_date: Date.new(2017, 8, i)) if l(Date.new(2017, 8, i), format: '%A') == 'samedi'
     end
 
-    (1..31).each do |i|
+    (1..30).each do |i|
       Event.create!(event_type: 'Diner', start_date: Date.new(2017, 9, i))
       Event.create!(event_type: 'Nuit', start_date: Date.new(2017, 9, i))
       Event.create!(event_type: 'Petit-dejeuner', start_date: Date.new(2017, 9, i))
       Event.create!(event_type: 'Menage', start_date: Date.new(2017, 9, i)) if l(Date.new(2017, 9, i), format: '%A') == 'samedi'
     end
 
-    (1..26).each do |i|
-      Event.create!(event_type: 'Diner', start_date: Date.new(2017, 2, i))
-      Event.create!(event_type: 'Nuit', start_date: Date.new(2017, 2, i))
-      Event.create!(event_type: 'Petit-dejeuner', start_date: Date.new(2017, 2, i))
-      Event.create!(event_type: 'Menage', start_date: Date.new(2017, 2, i)) if l(Date.new(2017, 2, i), format: '%A') == 'samedi'
+    (1..31).each do |i|
+      Event.create!(event_type: 'Diner', start_date: Date.new(2017, 10, i))
+      Event.create!(event_type: 'Nuit', start_date: Date.new(2017, 10, i))
+      Event.create!(event_type: 'Petit-dejeuner', start_date: Date.new(2017, 10, i))
+      Event.create!(event_type: 'Menage', start_date: Date.new(2017, 10, i)) if l(Date.new(2017, 10, i), format: '%A') == 'samedi'
     end
 
     redirect_to :admin_events_index
