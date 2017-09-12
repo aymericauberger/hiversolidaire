@@ -1,0 +1,86 @@
+.event-box {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top: solid 1px #DDDDDD;
+  border-bottom: solid 1px #DDDDDD;
+  font-size: 15px;
+}
+
+.main-table {
+  min-width: 700px;
+}
+
+.main-table ul {
+  margin: 10px 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.main-table td {
+  position: relative;
+  padding: 10px;
+  min-width: 250px;
+  vertical-align: top;
+}
+
+.main-table .date-column {
+  min-width: 135px;
+  max-width: 135px;
+}
+
+.main-table .comment-column {
+  min-width: 135px;
+}
+
+.main-table .menage-column {
+  min-width: 200px;
+}
+
+.green {
+  color: #35983A;
+}
+
+.head-row small {
+  font-size: 14px;
+}
+
+.form-field select {
+  margin: 7px 0 0 0;
+}
+
+.main-table .pair {
+  background-color: #F8F2FF;
+}
+
+.red-missing .benevoles-manquants {
+  color: red;
+}
+
+#login-popup {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+#mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.7);
+}
+
+#login-popup .popup-container {
+  opacity: 0;
+  background-color: white;
+  border-radius: 8px;
+  padding: 40px;
+  height: 300px;
+}
+
+.type_de_plat {
+  color: grey;
+}

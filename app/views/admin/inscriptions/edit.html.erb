@@ -1,0 +1,111 @@
+<%= link_to 'Retour', :back, class: 'btn btn-default' %>
+
+<h1>Modifier une inscription</h1>
+
+<br>
+<br>
+
+<p>Inscription pour : <strong><%= @event.human_name %></strong></p>
+
+<% if @event.volunteers.present? %>
+  <br>
+  <p>Tous les inscrits :</p>
+
+  <ul>
+	<% @event.volunteers.each do |volunteer| %>
+		  <li>
+		<%= volunteer.first_name %> <%= volunteer.last_name %>
+		<% if @event.event_type == 'Diner' -%>
+			  <% inscription = Inscription.find_by(event_id: @event.id, volunteer_id: volunteer.id) -%>
+			  apporte : <%= inscription.type_de_plat %> <%= "(#{inscription.plat})" if inscription.plat.present? %>
+		<% end %>
+		  </li>
+	<% end %>
+  </ul>
+<% end %>
+
+<br>
+<br>
+
+<%= form_for [:admin, @event, @inscription], class: 'form-horizontal' do |f| %>
+  <% @vonteer = @inscription.volunteer %>
+
+  <div class="col-sm-6">
+	<div class="form-field col-xs-12">
+	  <%= label_tag :first_name, 'Prénom*'.html_safe, class: 'col-sm-4 control-label' %>
+	  <div class="col-sm-8">
+	    <%= text_field_tag :first_name, @inscription.volunteer.first_name, class: 'form-control', placeholder: 'Prénom (obligatoire)', required: 'required' %>
+	  </div>
+	</div>
+
+	<div class="form-field col-xs-12">
+	  <%= label_tag :last_name, 'Nom de famille*'.html_safe, class: 'col-sm-4 control-label' %>
+	  <div class="col-sm-8">
+	    <%= text_field_tag :last_name, @inscription.volunteer.last_name, class: 'form-control', placeholder: 'Nom de famille (obligatoire)', required: 'required' %>
+	  </div>
+	</div>
+
+	<div class="form-field col-xs-12">
+	  <%= label_tag :phone, 'Numéro de téléphone*'.html_safe, class: 'col-sm-4 control-label' %>
+	  <div class="col-sm-8">
+	    <%= text_field_tag :phone, @inscription.volunteer.phone, class: 'form-control', placeholder: 'Numéro de téléphone (obligatoire)', required: 'required' %>
+	  </div>
+	</div>
+
+	<div class="form-field col-xs-12">
+	  <%= label_tag :email, 'Email', class: 'col-sm-4 control-label' %>
+	  <div class="col-sm-8">
+	    <%= text_field_tag :email, @inscription.volunteer.email, class: 'form-control', placeholder: 'Email' %>
+	  </div>
+	</div>
+
+  </div>
+
+  <% if @event.event_type == "Diner" %>
+	<div class="col-sm-6">
+	  <div class="form-field col-xs-12">
+	    <%= label_tag :plat, 'Plat apporté', class: 'col-sm-4 control-label' %>
+	    <div class="col-sm-8">
+	      <%= select_tag :type_de_plat, options_for_select(['Entrée', 'Plat principal', 'Dessert', 'Pain + Fromage'], @inscription.type_de_plat), include_blank: true %>
+	    </div>
+	  </div>
+	  <div class="form-field col-xs-12">
+	    <div class="col-sm-8 col-sm-offset-4">
+	      <%= text_field_tag :plat, @inscription.plat, class: 'form-control', placeholder: 'Détail (facultatif)' %>
+	    </div>
+	  </div>
+
+      <div class="form-field col-xs-12">
+        <%= label_tag :responsable, "Responsable de soirée", class: 'col-sm-7 control-label' %>
+        <div class="col-sm-5" style="padding-top: 7px;">
+          <%= check_box_tag :responsable, 'Responsable', @inscription.responsable %>
+        </div>
+      </div>
+
+    </div>
+  <% end %>
+
+  <% if @event.event_type == "Nuit" %>
+    <div class="col-sm-6">
+      <div class="form-field col-xs-12">
+        <% if params[:other_person].blank? %>
+          <%= label_tag :vient_au_diner, 'Participera au dîner', class: 'col-sm-5 control-label' %>
+        <% end %>
+        <div class="col-sm-6" style="padding-top: 7px;">
+          <%= check_box_tag :vient_au_diner, 'Vient au diner', @inscription.vient_au_diner %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-field col-xs-12" style="text-align: center;">
+	<br>
+	<%= submit_tag "Modifier", class: 'btn btn-primary' %>
+  </div>
+<% end %>
+
+<div class="col-xs-12">
+  <br>
+  <br>
+  <%= link_to "Supprimer l'inscription", admin_event_inscription_path(@inscription), method: :delete, class: 'btn btn-danger btn-sm', data: {confirm: 'Êtes-vous sûr ?'} %>
+</div>

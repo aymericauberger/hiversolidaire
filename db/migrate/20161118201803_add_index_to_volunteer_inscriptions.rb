@@ -1,0 +1,5 @@
+class AddIndexToVolunteerInscriptions < ActiveRecord::Migration[5.0]
+  def change
+    add_index :inscriptions, :volunteer_id
+  end
+end

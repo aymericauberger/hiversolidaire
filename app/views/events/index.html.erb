@@ -1,0 +1,166 @@
+<div class="col-sm-6">
+  <h1>Hiver Solidaire <small> - Saint-Germain des Prés</small></h1>
+  <h2>Calendrier des inscriptions</h2>
+</div>
+
+<br>
+<% if @current_user.present? %>
+  <div class="col-md-3 col-md-offset-3 col-sm-6 well">
+    <div class="container-fluid no-padding">
+      <%= link_to 'Déconnexion', my_logout_path, class:'btn btn-default btn-sm', style: 'float: right;' %>
+      <p>Mes informations :</p>
+      <%= @current_user.first_name %> <%= @current_user.last_name %><br>
+      <%= @current_user.phone %><br>
+      <%= @current_user.email %><br>
+    </div>
+  </div>
+<% else %>
+  <div class="col-md-3 col-md-offset-3 col-sm-6 well">
+    <div class="container-fluid no-padding">
+      <%= form_tag my_login_path do %>
+        <div class="col-xs-12 no-padding">
+          Connexion :
+        </div>
+        <div class="col-xs-8 no-padding">
+          <%= text_field_tag :phone, '', class: 'form-control', placeholder: 'Numéro de téléphone', required: 'required' %>
+        </div>
+        <div class="col-xs-4">
+          <%= submit_tag 'Envoyer', class: 'btn btn-default' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+<div class="col-md-3 col-md-offset-9 col-sm-6 nav-link">
+  <%= link_to 'Questions réponses', faq_path %>
+</div>
+
+<div class="col-xs-12">
+  <br>
+  <br>
+  <br>
+  <% options = ['Décembre 2016', 'Janvier 2017', 'Février 2017'] %>
+  <% options.shift if l(Date.today, format: '%B %Y').humanize == 'Janvier 2017' %>
+  <% unless l(Date.today, format: '%B %Y').humanize == 'Février 2017' %>
+    <% options.each do |option| %>
+      <% if option == params[:month] || params[:month].blank? && l(Date.today, format: '%B %Y').humanize == option %>
+        <span class="visible-xs" style="clear: both; margin: 6px 0;"></span>
+        <span style="font-size: 14px; padding: 6px 12px;"><strong><%= option %></strong></span>
+      <% else %>
+        <span class="visible-xs" style="clear: both; margin: 6px 0;"></span>
+        <%= link_to 'Voir le mois de ' + option, root_path(month: option), class: 'btn btn-default', style: 'display: inline-block;' %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<table class="main-table">
+  <tr>
+    <th class="head-row date-column">
+      <h3>&nbsp;</h3>
+    </th>
+
+    <th class="head-row">
+      <h3>Petit-déjeûner <br><small>(7h30-8h30)</small></h3>
+    </th>
+
+    <th class="head-row">
+      <h3>Dîner <br><small>(20h-22h)</small></h3>
+    </th>
+
+    <th class="head-row">
+      <h3>Nuit <br><small>(22h30-7h30)</small></h3>
+    </th>
+
+    <th class="head-row">
+      <h3>Ménage <br><small>(8h45-11h)</small></h3>
+    </th>
+
+    <th class="head-row comment-column">
+      <h3><br><small>Commentaires</small></h3>
+    </th>
+  </tr>
+
+  <% pair = true %>
+  <% semaine = 0 %>
+  <% (@from_date..@to_date).each do |date| %>
+    <% if date > Date.today - 2 %>
+
+      <% if date > @from_date + 2 && l(date, format: '%A') == "lundi" %>
+        <% semaine += 1 %>
+        <tr>
+          <th class="head-row date-column">
+            <h3>&nbsp;</h3>
+          </th>
+
+          <th class="head-row">
+            <br>
+            <br>
+            <h3>Petit-déjeûner <br><small>(7h30-8h30)</small></h3>
+          </th>
+
+          <th class="head-row">
+            <br>
+            <br>
+            <h3>Dîner <br><small>(20h-22h)</small></h3>
+          </th>
+
+          <th class="head-row">
+            <br>
+            <br>
+            <h3>Nuit <br><small>(22h30-7h30)</small></h3>
+          </th>
+
+          <th class="head-row menage-column">
+            <br>
+            <br>
+            <h3>Ménage <br><small>(8h45-11h)</small></h3>
+          </th>
+
+          <th class="head-row comment-column">
+            <br>
+            <br>
+            <h3><br><small>Commentaires</small></h3>
+          </th>
+        </tr>
+      <% end %>
+
+      <tr class="<%= 'pair' if pair %><%= ' red-missing' if date < Date.today + 30 && semaine < 2 %>">
+        <td class="event-box date-column">
+          <%= l(date, format: :long).humanize %>
+        </td>
+
+        <td class="event-box">
+          <%= render partial: 'event_section', locals: { start_date: date, event_type: 'Petit-dejeuner', required_number: 2 } %>
+        </td>
+
+        <td class="event-box">
+          <%= render partial: 'event_section', locals: { start_date: date, event_type: 'Diner', required_number: 4 } %>
+        </td>
+
+        <td class="event-box">
+          <%= render partial: 'event_section', locals: { start_date: date, event_type: 'Nuit', required_number: 2 } %>
+        </td>
+
+        <% if l(date, format: '%A') == "samedi" %>
+          <td class="event-box menage-column">
+            <%= render partial: 'event_section', locals: { start_date: date, event_type: 'Menage', required_number: 2 } %>
+          </td>
+        <% else %>
+          <td class="event-box" style="min-width: 100px; text-align: right;">
+          </td>
+        <% end %>
+        <td class="event-box comment-column">
+          <% commentaire = Commentaire.find_by(date: date) %>
+          <% if commentaire.present? %>
+            <%= commentaire.text.slice(0, 100) %><%= '...' if commentaire.text.length > 99 %><br>
+            <%= link_to 'Voir / Modifier', edit_commentaire_path(commentaire), class: 'btn btn-default btn-sm' %>
+          <% else %>
+            <%= link_to 'Laisser un commentaire', new_commentaire_path(date: date), class: 'btn btn-default btn-sm' %>
+          <% end %>
+        </td>
+      </tr>
+      <% pair = !pair %>
+    <% end %>
+  <% end %>
+</table>

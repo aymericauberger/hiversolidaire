@@ -1,0 +1,36 @@
+<div id="login-popup">
+  <div id="mask"></div>
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="col-md-4 col-md-offset-4 popup-container">
+    <div class="container-fluid no-padding">
+      <br>
+      <%= form_tag my_login_path(event_id: @event.id) do %>
+        <div class="col-xs-12 no-padding">
+          <h4>Veuillez vous connecter avec votre numéro de téléphone :</h4>
+          <br>
+        </div>
+        <div class="col-xs-8 no-padding">
+          <%= text_field_tag :phone, '', class: 'form-control', placeholder: 'Numéro de téléphone', required: 'required' %>
+          <br>
+          <br>
+        </div>
+        <div class="col-xs-4">
+          <%= submit_tag 'Envoyer', class: 'btn btn-default' %>
+        </div>
+
+        <div class="col-xs-12 no-padding">
+          <h4><%= link_to "Première inscription ? Enregistrez-vous", new_event_inscription_path(@event, premiere_connexion: true) %></h4>
+        </div>
+      <% end %>
+      <br>
+      <br>
+    </div>
+  </div>
+
+</div>

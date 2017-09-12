@@ -1,0 +1,62 @@
+<% event = Event.find_by(start_date: start_date, event_type: event_type) %>
+
+<% if event.present? %>
+  <% if event.event_type == 'Diner' %>
+
+    <% inscriptions_sans_plats = event.inscriptions.where('type_de_plat IS NULL OR type_de_plat = ?', '') %>
+    <% inscriptions_sans_plats.each do |inscription| %>
+	  <%= link_to inscription.volunteer.full_name, edit_admin_event_inscription_path(event, inscription) %>
+      <%= "(#{inscription.plat})" if inscription.plat.present? %>
+      <%= "(Resp.)" if inscription.responsable %>
+      <br>
+    <% end %>
+
+    <% inscriptions_nuit = Inscription.where(event: Event.find_by(start_date: start_date, event_type: "Nuit"), vient_au_diner: true) %>
+    <% inscriptions_nuit.each do |inscription_nuit| %>
+      <%= link_to "#{inscription_nuit.volunteer.full_name} (reste la nuit)", edit_admin_event_inscription_path(event, inscription_nuit) %>
+      <br>
+    <% end %>
+    <%= "--------------------------<br>".html_safe if inscriptions_sans_plats.present? || inscriptions_nuit.present? %>
+
+    <% ['Entrée', 'Plat principal', 'Dessert', 'Pain + Fromage'].each do |type_de_plat| %>
+      <span class="type_de_plat"><%= type_de_plat %> : </span>
+      <% if inscription = event.inscriptions.find_by(type_de_plat: type_de_plat) %>
+        <%= link_to inscription.volunteer.full_name, edit_admin_event_inscription_path(event, inscription) %>
+        <%= "(#{inscription.plat})" if inscription.plat.present? %>
+        <%= "(Resp.)" if inscription.responsable %>
+      <% end %>
+      <br>
+    <% end %>
+    <%= "--------------------------<br>".html_safe %>
+
+  <% else %>
+    <% if event.inscriptions.present? %>
+      <% event.inscriptions.each do |inscription| %>
+        <%= link_to inscription.volunteer.full_name, edit_admin_event_inscription_path(event, inscription) %>
+        <br>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if event.inscriptions.size < required_number || event.event_type == "Diner" %>
+    <% missing = [required_number - event.inscriptions.size, 0].max %>
+    <% missing = [required_number - event.inscriptions.where.not(type_de_plat: nil).size, 0].max if event.event_type == "Diner" %>
+    <% if event.volunteers.include? @current_user %>
+      <div class="visible-xs" style="height: 77px; width: 100%;"></div>
+      <div class="hidden-xs" style="height: 60px; width: 100%;"></div>
+    <% else %>
+      <div style="height: 60px; width: 100%;"></div>
+    <% end %>
+    <div style="position: absolute; bottom: 10px; display: inline-block; min-width: 170px;">
+      <% if missing > 0 %>
+        <p class="benevoles-manquants"><strong><%= missing %> bénévole<%= 's' if missing > 1 %> manquant<%= 's' if missing > 1 %></strong></p>
+      <% else %>
+        <p><strong>Complet</strong></p>
+      <% end %>
+      <div style="text-align: center;">
+      </div>
+    </div>
+  <% else %>
+    <p><strong>Complet</strong></p>
+  <% end %>
+<% end %>

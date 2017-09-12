@@ -1,0 +1,13 @@
+<%= link_to 'Retour', :back, class: 'btn btn-default' %>
+
+<h2>Commentaires pour le <%= l(@commentaire.date, format: :long) %></h2>
+
+<br>
+<br>
+<%= form_for @commentaire do |f| %>
+  <%= hidden_field_tag :date, @commentaire.date %>
+  <%= f.text_area :text, size: '70x10' %>
+  <br>
+  <br>
+  <%= f.submit 'Modifier', class: 'btn btn-primary btn-sm' %>
+<% end %>

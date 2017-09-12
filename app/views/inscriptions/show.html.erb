@@ -1,0 +1,34 @@
+<%= link_to 'Retour', :back, class: 'btn btn-default' %>
+
+<h1>Inscription</h1>
+
+<br>
+<br>
+
+<p>Inscription pour : <strong><%= @event.human_name %></strong></p>
+
+<p>
+  <%= @inscription.volunteer.first_name %> <%= @inscription.volunteer.last_name %><br>
+  <%= @inscription.volunteer.phone %><br>
+  <%= @inscription.volunteer.email %><br>
+</p>
+
+
+<% if @event.event_type == 'Diner' -%>
+    <p>
+      Plat apporté : <%= @inscription.type_de_plat %> <%= "(#{@inscription.plat})" if @inscription.plat.present? %>
+    </p>
+
+    <% if @inscription.responsable %>
+      <p>Je souhaite être responsable de soirée.</p>
+    <% end %>
+<% end %>
+
+<% if @event.event_type == 'Nuit' && @inscription.vient_au_diner -%>
+    Je souhaite participer au dîner.
+<% end %>
+
+<br>
+<br>
+
+<%= link_to 'Me désinscrire', event_inscription_path(@inscription), method: :delete, class: 'btn btn-danger btn-sm', data: {confirm: 'Êtes-vous sûr ?'} %>

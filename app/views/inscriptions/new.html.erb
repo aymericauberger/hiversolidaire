@@ -1,0 +1,134 @@
+<%= link_to 'Retour', :back, class: 'btn btn-default' %>
+
+<h1>Inscription</h1>
+
+<br>
+<br>
+
+<% if params[:other_person].blank? %>
+  <p>Je m'inscris pour : <strong><%= @event.human_name %></strong></p>
+<% else %>
+  <p>J'inscris une autre personne pour : <strong><%= @event.human_name %></strong></p>
+<% end %>
+
+<% if @event.volunteers.present? %>
+  <br>
+  <p>Déjà inscrit(e)<%= 's' if @event.volunteers.size > 1 %> :</p>
+
+  <ul>
+    <% @event.volunteers.each do |volunteer| %>
+      <li>
+        <%= volunteer.first_name %> <%= volunteer.last_name %>
+        <% if @event.event_type == 'Diner' -%>
+          <% inscription = Inscription.find_by(event_id: @event.id, volunteer_id: volunteer.id) -%>
+          apporte : <%= inscription.type_de_plat %> <%= "(#{inscription.plat})" if inscription.plat.present? %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<br>
+<br>
+
+<%= form_for [@event, Inscription.new], class: 'form-horizontal' do |f| %>
+  <%= hidden_field_tag :other_person, params[:other_person] %>
+
+  <div class="col-sm-6">
+    <div class="form-field col-xs-12">
+      <%= label_tag :first_name, 'Prénom*', class: 'col-sm-4 control-label' %>
+      <div class="col-sm-8">
+        <%= text_field_tag :first_name, @volunteer.first_name, class: 'form-control', placeholder: 'Prénom (obligatoire)', required: 'required' %>
+      </div>
+    </div>
+
+    <div class="form-field col-xs-12">
+      <%= label_tag :last_name, 'Nom de famille*', class: 'col-sm-4 control-label' %>
+      <div class="col-sm-8">
+        <%= text_field_tag :last_name, @volunteer.last_name, class: 'form-control', placeholder: 'Nom de famille (obligatoire)', required: 'required' %>
+      </div>
+    </div>
+
+    <div class="form-field col-xs-12">
+      <%= label_tag :phone, 'Numéro de téléphone*', class: 'col-sm-4 control-label' %>
+      <div class="col-sm-8">
+        <%= text_field_tag :phone, @volunteer.phone, class: 'form-control', placeholder: 'Numéro de téléphone (obligatoire)', required: 'required' %>
+      </div>
+    </div>
+
+    <div class="form-field col-xs-12">
+      <%= label_tag :email, 'Email', class: 'col-sm-4 control-label' %>
+      <div class="col-sm-8">
+        <%= text_field_tag :email, @volunteer.email, class: 'form-control', placeholder: 'Email' %>
+      </div>
+    </div>
+
+    <% if params[:other_person].blank? %>
+      <div class="form-field col-xs-12">
+        <%= label_tag :accept_save, 'Enregistrer mes informations', class: 'col-sm-6 control-label' %>
+        <div class="col-sm-6" style="padding-top: 7px;">
+          <%= check_box_tag :accept_save, @volunteer.accept_save, class: 'form-control' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @event.event_type == "Diner" %>
+    <div class="col-sm-6">
+      <% choix_plats = ['Entrée', 'Plat principal', 'Dessert', 'Pain + Fromage'] - @event.inscriptions.pluck(:type_de_plat) %>
+      <% if choix_plats.present? %>
+        <div class="form-field col-xs-12">
+          <div class="col-sm-4">
+            <strong>Plat apporté :</strong>
+          </div>
+          <div class="col-sm-8">
+            <% choix_plats.each do |nom_plat| %>
+              <%= radio_button_tag :type_de_plat, nom_plat %>
+              &nbsp;<%= label_tag "type_de_plat_#{nom_plat}", nom_plat %><br>
+            <% end %>
+          </div>
+        </div>
+        <div class="form-field col-xs-12">
+          <div class="col-sm-8 col-sm-offset-4">
+            <%= text_field_tag :plat, '', class: 'form-control', placeholder: 'Détail (facultatif)' %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if params[:other_person].blank? && @event.inscriptions.where(responsable: true).blank? %>
+        <div class="form-field col-xs-12">
+          <%= label_tag :responsable, "Je souhaite être responsable de soirée", class: 'col-sm-7 control-label' %>
+          <div class="col-sm-5" style="padding-top: 7px;">
+            <%= check_box_tag :responsable, class: 'form-control', checked: false %>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+  <% end %>
+
+  <% if @event.event_type == "Nuit" %>
+    <div class="col-sm-6">
+      <div class="form-field col-xs-12">
+        <% if params[:other_person].blank? %>
+          <%= label_tag :vient_au_diner, 'Je souhaite participer au dîner', class: 'col-sm-5 control-label' %>
+        <% else %>
+          <%= label_tag :vient_au_diner, 'Cette personne souhaite participer au dîner', class: 'col-sm-5 control-label' %>
+        <% end %>
+        <div class="col-sm-6" style="padding-top: 7px;">
+          <%= check_box_tag :vient_au_diner, checked: false, class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-field col-xs-12" style="text-align: center;">
+    <br>
+    <% if params[:other_person].blank? %>
+      <%= submit_tag "Je m'inscris", class: 'btn btn-primary' %>
+    <% else %>
+      <%= submit_tag "Inscrire cette personne", class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+<% end %>
+

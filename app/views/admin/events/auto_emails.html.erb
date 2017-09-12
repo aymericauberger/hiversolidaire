@@ -1,0 +1,40 @@
+<%= link_to 'Retour', :back, class: 'btn btn-default' %>
+
+<h2>Emails pour le <%= l(@date, format: :long) %></h2>
+
+<br>
+<br>
+<%= form_tag admin_auto_emails_path do %>
+  <%= hidden_field_tag :date, @date %>
+  <p><strong>Message pour tous les volontaires :</strong></p>
+  <p>
+    Sujet: <%= text_field_tag :email_subject, @email_subject, size: 100 %>
+  </p>
+  <%= text_area_tag :email_content, email_content(@date, @responsable), size: '100x20' %>
+  <br>
+  <br>
+  <p>Destinataires :</p>
+  <ul>
+    <% @email_recipients.each do |recipient| %>
+      <li><%= recipient %></li>
+    <% end %>
+  </ul>
+  <br>
+  <% unless @diner.mail_sent %>
+    <p>----------------------------</p>
+    <p><strong>Message pour le responsable :</strong></p>
+    <p>
+      Sujet: <%= text_field_tag :email2_subject, @email2_subject, size: 100 %>
+    </p>
+    <%= text_area_tag :email2_content, email2_content(@date, @responsable), size: '100x20' %>
+    <br>
+    <br>
+    <p>Destinataire :</p>
+    <ul>
+      <li><%= @email2_recipient %></li>
+    </ul>
+  <% end %>
+
+  <%= submit_tag 'Envoyer', class: 'btn btn-primary btn-sm' %>
+<% end %>
+

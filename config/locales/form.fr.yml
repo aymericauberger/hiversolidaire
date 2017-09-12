@@ -1,0 +1,34 @@
+fr:
+  activerecord:
+    attributes:
+      user:
+        first_name: "Prénom"
+        last_name: "Nom"
+        password: "Mot de passe"
+        email: "Email"
+        password_confirmation: "Confirmation du mot de passe"
+        current_password: "Mot de passe actuel"
+  forms:
+    login: "Se connecter"
+    logout: "Fermer la session"
+    signup: "Créer un compte"
+    password_forgotten: "Mot de passe oublié ?"
+    didnt_receive_confirmation_instructions: "Vous n'avez pas reçu les instructions de confirmation ?"
+    didnt_receive_unlock_instructions: "Vous n'avez pas reçu les instructions de débloquage ?"
+    sign_in_with: "Se connecter avec"
+    characters_minimum: "caractères minimum"
+    password_leave_blank: "Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe."
+    enter_current_password: "Entrez votre mot de passe actuel pour confirmer les modifications."
+    continue_with: "Continuer avec"
+    or: "ou"
+    link_account: "Lier ce compte à"
+    connected_with_facebook_as: "Compte connecté à Facebook en tant que "
+    password_forgotten: "Mot de passe oublié ?"
+    send_password_instructions: "Recevoir des instructions de réinitialisation"
+    current_password_needed: "Veuillez entrer votre mot de passe actuel pour confirmer vos modifications."
+    new_password: "Nouveau mot de passe"
+    success:
+      account_updated: "Vos informations ont été mises à jour."
+    errors:
+      facebook_user_exists: "Ce compte Facebook est déjà lié à un autre compte Musicae."
+

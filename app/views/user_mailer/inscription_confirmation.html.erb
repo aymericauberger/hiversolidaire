@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h2>Merci pour votre inscription, <%= @inscription.volunteer.first_name %> <%= @inscription.volunteer.last_name %></h2>
+
+	<p>Vous êtes bien inscrit pour : <strong><%= @event.human_name %></strong></p>
+	<% if @inscription.type_de_plat.present? || @inscription.plat.present? %>
+	  <p>Vous apportez : <%= @inscription.type_de_plat %> <%= "(#{@inscription.plat})" if @inscription.plat.present? %></p>
+	<% end %>
+  <% if @event.event_type == 'Nuit' && @inscription.vient_au_diner -%>
+      <p>Vous souhaitez participer au dîner.</p>
+  <% end %>
+  <% if @inscription.responsable %>
+    <p>Vous avez choisi d'être responsable de soirée.</p>
+  <% end %>
+  </body>
+</html>

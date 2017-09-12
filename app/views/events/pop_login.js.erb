@@ -1,0 +1,12 @@
+$('body').append("<%= j render partial: 'events/login_popup', locals: {event: @event} %>");
+
+$('.popup-container').css('opacity', 0)
+  .slideDown('slow')
+  .animate(
+    { opacity: 1 },
+    { queue: false, duration: 'slow' }
+  );
+
+$('#mask').click(function() {
+  $('#login-popup').remove();
+});

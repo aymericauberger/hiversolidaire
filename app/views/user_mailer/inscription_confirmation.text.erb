@@ -1,0 +1,12 @@
+Merci pour votre inscription, <%= @inscription.volunteer.first_name %> <%= @inscription.volunteer.last_name %>.
+
+Vous êtes bien inscrit pour : <%= @event.human_name %>
+<% if @inscription.type_de_plat.present? || @inscription.plat.present? %>
+  Vous apportez : <%= @inscription.type_de_plat %> <%= "(#{@inscription.plat})" if @inscription.plat.present? %>
+<% end %>
+<% if @event.event_type == 'Nuit' && @inscription.vient_au_diner -%>
+  Vous souhaitez participer au dîner.
+<% end %>
+<% if @inscription.responsable %>
+  Vous avez choisi d'être responsable de soirée.
+<% end %>
