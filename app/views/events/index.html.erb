@@ -35,24 +35,7 @@
   <%= link_to 'Questions réponses', faq_path %>
 </div>
 
-<div class="col-xs-12">
-  <br>
-  <br>
-  <br>
-  <% options = ['Décembre 2016', 'Janvier 2017', 'Février 2017'] %>
-  <% options.shift if l(Date.today, format: '%B %Y').humanize == 'Janvier 2017' %>
-  <% unless l(Date.today, format: '%B %Y').humanize == 'Février 2017' %>
-    <% options.each do |option| %>
-      <% if option == params[:month] || params[:month].blank? && l(Date.today, format: '%B %Y').humanize == option %>
-        <span class="visible-xs" style="clear: both; margin: 6px 0;"></span>
-        <span style="font-size: 14px; padding: 6px 12px;"><strong><%= option %></strong></span>
-      <% else %>
-        <span class="visible-xs" style="clear: both; margin: 6px 0;"></span>
-        <%= link_to 'Voir le mois de ' + option, root_path(month: option), class: 'btn btn-default', style: 'display: inline-block;' %>
-      <% end %>
-    <% end %>
-  <% end %>
-</div>
+<%= render 'shared/month_selector', admin: false %>
 
 <table class="main-table">
   <tr>

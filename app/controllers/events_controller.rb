@@ -1,13 +1,13 @@
+# PUBLIC
 class EventsController < ApplicationController
   def index
-    if params[:month].blank?
-      month = l(Date.today, format: '%B %Y').humanize
-    else
-      month = params[:month]
-    end
+    date = [Date.new(2017, 12, 1), Date.today].max
+    month = params[:month].presence ||
+            l(date, format: '%B %Y').humanize
+    month = month.sub('Décembre', 'Dec').sub('Février', 'Feb')
 
-    @from_date = I18n.transliterate(month).to_date.beginning_of_month
-    @to_date = I18n.transliterate(month).to_date.end_of_month
+    @from_date = month.to_date.beginning_of_month
+    @to_date = month.to_date.end_of_month
 
     if cookies.signed[:hiver_solidaire_id].present?
       id = cookies.signed[:hiver_solidaire_id].scan(/\d+$/).first

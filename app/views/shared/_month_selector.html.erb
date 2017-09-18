@@ -1,0 +1,18 @@
+<div class="col-xs-12">
+  <br>
+  <br>
+  <br>
+  <% options = ['Décembre 2017', 'Janvier 2018', 'Février 2018'] %>
+  <% options.shift if Date.today > Date.new(2017, 12, 31) %>
+  <% unless  Date.today > Date.new(2018, 1, 31) %>
+    <% options.each do |option| %>
+      <% if option == params[:month] || params[:month].blank? && l([Date.today, Date.new(2017, 12, 1)].max, format: '%B %Y').humanize == option %>
+        <span class="visible-xs" style="clear: both; margin: 6px 0;"></span>
+        <span style="font-size: 14px; padding: 6px 12px;"><strong><%= option %></strong></span>
+      <% else %>
+        <span class="visible-xs" style="clear: both; margin: 6px 0;"></span>
+        <%= link_to 'Voir le mois de ' + option, admin ? admin_root_path(month: option) : root_path(month: option), class: 'btn btn-default', style: 'display: inline-block;' %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
