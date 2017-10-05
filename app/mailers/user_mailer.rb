@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-  default from: 'SSVP Saint-Germain-des-Prés <ssvp.sgp@gmail.com>'
+  default from: "#{ENV['APP_NAME']} <#{ENV['EMAIL_CONTACT']}>"
 
   def inscription_confirmation(inscription)
     @inscription = inscription

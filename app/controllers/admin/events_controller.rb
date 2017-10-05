@@ -63,8 +63,8 @@ module Admin
     end
 
     def custom_action
-      Inscription.destroy_all
-      Event.destroy_all
+      # Inscription.destroy_all
+      # Event.destroy_all
 
       (1..31).each do |i|
         Event.create!(event_type: 'Diner', start_date: Date.new(2017, 12, i))

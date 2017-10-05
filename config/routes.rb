@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  scope '4nDWwolPHNbRMjfoT5Ni/calendrier' do
+  scope "#{ENV['SECRET_KEY']}/calendrier" do
     root to: 'events#index'
     devise_for :users
 

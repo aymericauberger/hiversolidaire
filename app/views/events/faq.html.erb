@@ -1,5 +1,5 @@
 <div class="col-sm-6">
-  <h1>Hiver Solidaire <small> - Saint-Germain des Prés</small></h1>
+  <h1>Hiver Solidaire <small> - <%= ENV['APP_NAME'] %></small></h1>
   <h2>Questions réponses</h2>
 </div>
 
@@ -34,6 +34,6 @@
 
   <br>
   <h4>… je n’arrive pas à me désinscrire</h4>
-  <p>Envoyez un mail à <a href="mailto:ssvp.sgp@gmail.com">ssvp.sgp@gmail.com</a> en précisant votre nom et la date, nous nous en chargerons.</p>
+  <p>Envoyez un mail à <a href="mailto:<%= ENV['EMAIL_CONTACT'] %>"><%= ENV['EMAIL_CONTACT'] %></a> en précisant votre nom et la date, nous nous en chargerons.</p>
 </div>
 
