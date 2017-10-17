@@ -1,94 +1,87 @@
-<% event = Event.find_by(start_date: start_date, event_type: event_type) %>
+<% if event_type == 'Menage' && l(start_date, format: '%A') != "samedi"  %>
+  <td class="event-box" style="min-width: 100px; text-align: right;">
+          </td>
+<% else %>
 
-<% cache ['event_section', event, @current_user] do %>
+<td class="event-box<%= ' menage-column' if event_type == 'Menage' %>">
+  <% event = Event.find_by(start_date: start_date, event_type: event_type) %>
 
-<% if event.present? %>
+  <% cache ['event_section', event, @current_user] do %>
 
-  <% if event.event_type == 'Diner' %>
+  <% if event.present? %>
 
-    <% inscriptions_sans_plats = event.inscriptions.where('type_de_plat IS NULL OR type_de_plat = ?', '') %>
-    <% inscriptions_sans_plats.each do |inscription| %>
-      <% if @current_user && inscription.volunteer.phone == @current_user.phone -%>
-        <%= link_to inscription.volunteer.full_name, event_inscription_path(event, inscription) %>
-      <% else %>
-        <%= inscription.volunteer.full_name %>
-      <% end %>
-      <%= "(#{inscription.plat})" if inscription.plat.present? %>
-      <%= "(Resp.)" if inscription.responsable %>
-      <br>
-    <% end %>
+    <% if event.event_type == 'Diner' %>
 
-    <% inscriptions_nuit = Inscription.where(event: Event.find_by(start_date: start_date, event_type: "Nuit"), vient_au_diner: true) %>
-    <% inscriptions_nuit.each do |inscription_nuit| %>
-      <% if inscription_nuit.volunteer == @current_user %>
-        <%= link_to "#{inscription_nuit.volunteer.full_name} (reste la nuit)", event_inscription_path(inscription_nuit.event, inscription_nuit) %>
-      <% else %>
-        <%= inscription_nuit.volunteer.first_name %> <%= inscription_nuit.volunteer.last_name %> (reste la nuit)
-      <% end %>
-      <br>
-    <% end %>
-    <%= "--------------------------<br>".html_safe if inscriptions_sans_plats.present? || inscriptions_nuit.present? %>
-
-    <% ['Entrée', 'Plat principal', 'Dessert', 'Pain + Fromage'].each do |type_de_plat| %>
-      <span class="type_de_plat"><%= type_de_plat %> : </span>
-      <% if inscription = event.inscriptions.find_by(type_de_plat: type_de_plat) %>
-        <% if @current_user && inscription.volunteer.phone == @current_user.phone -%>
-          <%= link_to inscription.volunteer.full_name, event_inscription_path(event, inscription) %>
-        <% else %>
-          <%= inscription.volunteer.full_name %>
-        <% end %>
+      <% inscriptions_sans_plats = event.inscriptions.where('type_de_plat IS NULL OR type_de_plat = ?', '') %>
+      <% inscriptions_sans_plats.each do |inscription| %>
+        <%= display_inscription(inscription) %>
         <%= "(#{inscription.plat})" if inscription.plat.present? %>
         <%= "(Resp.)" if inscription.responsable %>
+        <br>
       <% end %>
-      <br>
-    <% end %>
-    <%= "--------------------------<br>".html_safe %>
 
-  <% else %>
-    <% if event.inscriptions.present? %>
-      <% event.inscriptions.each do |inscription| %>
-        <% if @current_user && inscription.volunteer.phone == @current_user.phone -%>
-          <%= link_to inscription.volunteer.full_name, event_inscription_path(event, inscription) %>
-        <% else %>
-          <%= inscription.volunteer.full_name %>
+      <% inscriptions_nuit = Inscription.where(event: Event.find_by(start_date: start_date, event_type: "Nuit"), vient_au_diner: true) %>
+      <% inscriptions_nuit.each do |inscription_nuit| %>
+        <%= display_inscription(inscription_nuit) %> (reste la nuit)
+        <br>
+      <% end %>
+      <%= "--------------------------<br>".html_safe if inscriptions_sans_plats.present? || inscriptions_nuit.present? %>
+
+      <% Constants::DINER_PLATS.each do |type_de_plat| %>
+        <span class="type_de_plat"><%= type_de_plat %> : </span>
+        <% if inscription = event.inscriptions.find_by(type_de_plat: type_de_plat) %>
+          <%= display_inscription(inscription) %>
+          <%= "(#{inscription.plat})" if inscription.plat.present? %>
+          <%= "(Resp.)" if inscription.responsable %>
         <% end %>
         <br>
       <% end %>
+      <%= "--------------------------<br>".html_safe %>
+
+    <% else %>
+      <% if event.inscriptions.present? %>
+        <% event.inscriptions.each do |inscription| %>
+          <%= display_inscription(inscription) %>
+          <br>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% if event.inscriptions.size < required_number || event.event_type == "Diner" %>
+      <% missing = [required_number - event.inscriptions.size, 0].max %>
+      <% missing = [required_number - event.inscriptions.where.not(type_de_plat: nil).size, 0].max if event.event_type == "Diner" %>
+      <% if event.volunteers.include? @current_user %>
+        <div class="visible-xs" style="height: 77px; width: 100%;"></div>
+        <div class="hidden-xs" style="height: 60px; width: 100%;"></div>
+      <% else %>
+        <div style="height: 60px; width: 100%;"></div>
+      <% end %>
+      <div style="position: absolute; bottom: 10px; display: inline-block; min-width: 170px;">
+        <% if missing > 0 %>
+          <p class="benevoles-manquants"><strong><%= missing %> bénévole<%= 's' if missing > 1 %> manquant<%= 's' if missing > 1 %></strong></p>
+        <% else %>
+          <p><strong>Complet</strong></p>
+        <% end %>
+        <div style="text-align: center;">
+          <% if event.volunteers.include? @current_user %>
+            <%= link_to "Inscrire une<br>autre personne".html_safe, new_event_inscription_path(event, other_person: true), class: 'btn btn-default btn-sm visible-xs' %>
+            <%= link_to "Inscrire une autre personne", new_event_inscription_path(event, other_person: true), class: 'btn btn-default btn-sm hidden-xs' %>
+          <% else %>
+            <% if @current_user.present? %>
+              <%= link_to "S'inscrire", new_event_inscription_path(event), class: 'btn btn-primary btn-sm' %>
+            <% else %>
+              <%= link_to "S'inscrire", new_event_inscription_path(event), remote: true, class: 'btn btn-primary btn-sm hidden-xs' %>
+              <%= link_to "S'inscrire", new_event_inscription_path(event, premiere_connexion: true), class: 'btn btn-primary btn-sm visible-xs' %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <p><strong>Complet</strong></p>
     <% end %>
   <% end %>
 
-  <% if event.inscriptions.size < required_number || event.event_type == "Diner" %>
-    <% missing = [required_number - event.inscriptions.size, 0].max %>
-    <% missing = [required_number - event.inscriptions.where.not(type_de_plat: nil).size, 0].max if event.event_type == "Diner" %>
-    <% if event.volunteers.include? @current_user %>
-      <div class="visible-xs" style="height: 77px; width: 100%;"></div>
-      <div class="hidden-xs" style="height: 60px; width: 100%;"></div>
-    <% else %>
-      <div style="height: 60px; width: 100%;"></div>
-    <% end %>
-    <div style="position: absolute; bottom: 10px; display: inline-block; min-width: 170px;">
-      <% if missing > 0 %>
-        <p class="benevoles-manquants"><strong><%= missing %> bénévole<%= 's' if missing > 1 %> manquant<%= 's' if missing > 1 %></strong></p>
-      <% else %>
-        <p><strong>Complet</strong></p>
-      <% end %>
-      <div style="text-align: center;">
-        <% if event.volunteers.include? @current_user %>
-          <%= link_to "Inscrire une<br>autre personne".html_safe, new_event_inscription_path(event, other_person: true), class: 'btn btn-default btn-sm visible-xs' %>
-          <%= link_to "Inscrire une autre personne", new_event_inscription_path(event, other_person: true), class: 'btn btn-default btn-sm hidden-xs' %>
-        <% else %>
-          <% if @current_user.present? %>
-            <%= link_to "S'inscrire", new_event_inscription_path(event), class: 'btn btn-primary btn-sm' %>
-          <% else %>
-            <%= link_to "S'inscrire", new_event_inscription_path(event), remote: true, class: 'btn btn-primary btn-sm hidden-xs' %>
-            <%= link_to "S'inscrire", new_event_inscription_path(event, premiere_connexion: true), class: 'btn btn-primary btn-sm visible-xs' %>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-  <% else %>
-    <p><strong>Complet</strong></p>
   <% end %>
-<% end %>
+</td>
 
 <% end %>

@@ -1,4 +1,12 @@
 module EventsHelper
+  def display_inscription(inscription)
+    if @current_user && inscription.volunteer.phone == @current_user.phone
+      return link_to inscription.volunteer.full_name,
+                     event_inscription_path(inscription.event, inscription)
+    end
+    inscription.volunteer.full_name
+  end
+
   def email_content(date, responsable)
     content = "Bonjour à tous,\n\nVous êtes inscrits pour la soirée du #{l(@date, format: :long)}, merci beaucoup pour votre engagement!\n\n"
 
@@ -38,7 +46,7 @@ module EventsHelper
         end
         # content += "--------------------------\n" if inscriptions_sans_plats.present? || inscriptions_nuit.present?
 
-        ['Entrée', 'Plat principal', 'Dessert', 'Pain + Fromage'].each do |type_de_plat|
+        Constants::DINER_PLATS.each do |type_de_plat|
           content += type_de_plat + ' : '
           if inscription = event.inscriptions.find_by(type_de_plat: type_de_plat)
             content += inscription.volunteer.full_name

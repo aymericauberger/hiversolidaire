@@ -66,7 +66,7 @@
 	  <div class="form-field col-xs-12">
 	    <%= label_tag :plat, 'Plat apporté', class: 'col-sm-4 control-label' %>
 	    <div class="col-sm-8">
-	      <%= select_tag :type_de_plat, options_for_select(['Entrée', 'Plat principal', 'Dessert', 'Pain + Fromage'], @inscription.type_de_plat), include_blank: true %>
+	      <%= select_tag :type_de_plat, options_for_select(Constants::DINER_PLATS, @inscription.type_de_plat), include_blank: true %>
 	    </div>
 	  </div>
 	  <div class="form-field col-xs-12">

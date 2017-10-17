@@ -75,7 +75,7 @@
 
   <% if @event.event_type == "Diner" %>
     <div class="col-sm-6">
-      <% choix_plats = ['Entrée', 'Plat principal', 'Dessert', 'Pain + Fromage'] - @event.inscriptions.pluck(:type_de_plat) %>
+      <% choix_plats = Constants::DINER_PLATS - @event.inscriptions.pluck(:type_de_plat) %>
       <% if choix_plats.present? %>
         <div class="form-field col-xs-12">
           <div class="col-sm-4">
@@ -116,7 +116,7 @@
           <%= label_tag :vient_au_diner, 'Cette personne souhaite participer au dîner', class: 'col-sm-5 control-label' %>
         <% end %>
         <div class="col-sm-6" style="padding-top: 7px;">
-          <%= check_box_tag :vient_au_diner, checked: false, class: 'form-control' %>
+          <%= check_box_tag :vient_au_diner, 1, ENV['NUIT_DINER_PAR_DEFAUT'] == 'true' %>
         </div>
       </div>
     </div>
