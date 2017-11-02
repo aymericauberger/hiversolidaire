@@ -66,14 +66,15 @@ module EventsHelper
       end
       content += "\n"
     end
-    content + "Toutes les personnes ayant renseigné une adresse de courriél reçoivent ce message.
-Par contre, le responsable de soirée doit contacter les personnes n’ayant pas renseigné d’adresse de courriél.
+    content += "Toutes les personnes ayant renseigné une adresse de courriél reçoivent ce message.
+Par contre, le responsable de soirée doit contacter les personnes n’ayant pas renseigné d’adresse de courriél.\n\n"
 
-Enfin, voici la liste de personnes accueillies :
+    if ENV['PERSONNES_ACCUEILLIES']
+      content += "Enfin, voici la liste de personnes accueillies :\n\n"
+      content += ENV['PERSONNES_ACCUEILLIES'] + "\n\n"
+    end
 
-Bruno, Christian, Jean-Louis, Valentin
-
-Quelques rappels :
+    content += "Quelques rappels :
 - Les bénévoles de la soirée doivent ramener avec eux les restes, sauf si les accueillis s’engagent à les prendre pour déjeuner le lendemain (car on ne peut pas stocker des restes ad infinitum)
 
 - Les bénévoles du petit déjeuner doivent prendre note des coordonnées des bénévoles de la nuit afin de les appeler en arrivant le matin pour qu’ils ouvrent la porte (ça sert aussi de réveil de dernière minute)
@@ -85,6 +86,7 @@ Quelques rappels :
 - Le lien pour le Calendrier d’inscriptions ne doit surtout pas faire objet des fuites qui pourraient permettre aux accueillis d’y avoir accès.
 
 Merci d’avance!"
+    content
   end
 
   def email2_content(date, responsable)
