@@ -86,13 +86,25 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: '' }
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
-    port:                 587,
-    # domain:               'gmail.com',
-    user_name:            ENV['MAILER_USERNAME'],
-    password:             ENV['MAILER_PASSWORD'],
-    authentication:       :login,
-    enable_starttls_auto: true  }
 
+  if ENV['MAILER_SYSTEM' == 'mailgun']
+    config.action_mailer.smtp_settings = {
+      port:           ENV['MAILGUN_SMTP_PORT'],
+      address:        ENV['MAILGUN_SMTP_SERVER'],
+      user_name:      ENV['MAILGUN_SMTP_LOGIN'],
+      password:       ENV['MAILGUN_SMTP_PASSWORD'],
+      domain:         ENV['MAILGUN_DOMAIN'],
+      authentication: :plain
+    }
+  else
+    config.action_mailer.smtp_settings = {
+      address:              'smtp.gmail.com',
+      port:                 587,
+      # domain:               'gmail.com',
+      user_name:            ENV['MAILER_USERNAME'],
+      password:             ENV['MAILER_PASSWORD'],
+      authentication:       :login,
+      enable_starttls_auto: true
+    }
+  end
 end
