@@ -87,7 +87,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: '' }
   config.action_mailer.delivery_method = :smtp
 
-  if ENV['MAILER_SYSTEM' == 'mailgun']
+  if ENV['MAILER_SYSTEM'] == 'mailgun'
     config.action_mailer.smtp_settings = {
       port:           ENV['MAILGUN_SMTP_PORT'],
       address:        ENV['MAILGUN_SMTP_SERVER'],
