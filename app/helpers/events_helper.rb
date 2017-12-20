@@ -10,14 +10,20 @@ module EventsHelper
   def email_content(date, responsable)
     content = "Bonjour à tous,\n\nVous êtes inscrits pour la soirée du #{l(@date, format: :long)}, merci beaucoup pour votre engagement!\n\n"
 
-    content += "Le responsable de soirée est #{responsable.full_name}.\nLe responsable de soirée doit arriver à 20h (ou un peu avant) afin d’ouvrir la porte, en effet il est le seul à avoir le code de la porte d’entrée.\nCe code est communiqué via un message séparé est doit rester secret.\n\n" if responsable
+    if Constants::PAROISSE == 'SGP'
+      content += "Le responsable de soirée est #{responsable.full_name}.\nLe responsable de soirée doit arriver à 20h (ou un peu avant) afin d’ouvrir la porte, en effet il est le seul à avoir le code de la porte d’entrée.\nCe code est communiqué via un message séparé est doit rester secret.\n\n" if responsable
+    else
+      content += "Le responsable de soirée est #{responsable.full_name}.\n\n" if responsable
+    end
 
     content += "Voici les coordonnées des bénévoles pour la soirée :\n\n"
 
     events = Event.where(start_date: date).where('events.event_type = ?', 'Diner') +
              Event.where(start_date: date).where('events.event_type = ?', 'Nuit') +
-             Event.where(start_date: date + 1).where('events.event_type = ?', 'Petit-dejeuner') +
-             Event.where(start_date: date + 1).where('events.event_type = ?', 'Menage')
+             Event.where(start_date: date + 1).where('events.event_type = ?', 'Petit-dejeuner')
+    unless Constants::PAROISSE == 'SJDHP'
+      events += Event.where(start_date: date + 1).where('events.event_type = ?', 'Menage')
+    end
     events.each do |event|
       if event.event_type == "Petit-dejeuner"
         content += "Et voici les coordonnées des bénévoles pour le lendemain :\n\n"
@@ -92,10 +98,14 @@ Merci d’avance!"
   def email2_content(date, responsable)
     content = "Bonjour,\n\nVous êtes responsable de soirée pour le #{l(@date, format: :long)}, merci beaucoup pour votre engagement!\n\n"
 
-    content += "Vos tâches :
+    if Constants::PAROISSE == 'SGP'
+      content += "Vos tâches :
 -  Le responsable de soirée doit arriver à 20h (ou un peu avant) afin d’ouvrir la porte, en effet il est le seul à avoir le code de la porte d’entrée.
 Le code est 0576 et il doit absolument rester secret, car c’est la garantie du bon fonctionnement de l’opération.
 Cela rassure aussi les accueillis savent que leurs affaires sont en sécurité.\n\n"
+    else
+      content += "Vos tâches :\n\n"
+    end
 
     content += "- Vérifier le calendrier le #{l(@date, format: :long)} afin de :
    - Vérifier s’il n’y a pas de nouveaux inscrits : nécessaire pour prévoir les quantités pour le dîner.
