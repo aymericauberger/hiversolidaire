@@ -1,11 +1,10 @@
-
 <table class="main-table">
   <%= render 'shared/table_header', admin: admin %>
 
   <% pair = true %>
   <% semaine = 0 %>
   <% (@from_date..@to_date).each do |date| %>
-    <% if date > Date.today - 2 %>
+    <% if date > Date.today - 2 && date <= Constants::END_DATE %>
 
       <% if date > @from_date + 2 && l(date, format: '%A') == "lundi" %>
         <% semaine += 1 %>
@@ -22,15 +21,11 @@
 
         <%= render partial: partial, locals: { start_date: date, event_type: 'Petit-dejeuner', required_number: 2 } %>
 
-        <% if ENV['MENAGE_DABORD'] == 'true' %>
-          <%= render partial: partial, locals: { start_date: date, event_type: 'Menage', required_number: 2 } %>
-        <% end %>
-
         <%= render partial: partial, locals: { start_date: date, event_type: 'Diner', required_number: Constants::DINER_REQUIRED_NUMBER } %>
 
         <%= render partial: partial, locals: { start_date: date, event_type: 'Nuit', required_number: 2 } %>
 
-        <% unless ENV['MENAGE_DABORD'] == 'true' %>
+        <% unless Constants::PAROISSE == 'SJDHP' %>
           <%= render partial: partial, locals: { start_date: date, event_type: 'Menage', required_number: 2 } %>
         <% end %>
 

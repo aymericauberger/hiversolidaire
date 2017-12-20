@@ -4,24 +4,26 @@
   </th>
 
   <th class="head-row">
-    <h3>Petit-déjeûner <br><small>(7h30-8h30)</small></h3>
+    <% if Constants::PAROISSE == 'SJDHP' %>
+      <h3>Petit-déjeûner - Ménage<br><small>(7h30-9h00)</small></h3>
+      <% else %>
+      <h3>Petit-déjeûner <br><small>(7h30-8h30)</small></h3>
+    <% end %>
   </th>
 
-  <% if ENV['MENAGE_DABORD'] == 'true' %>
-    <th class="head-row">
-      <h3>Ménage <br><small>(8h45-11h)</small></h3>
-    </th>
-  <% end %>
-
   <th class="head-row">
-    <h3>Dîner <br><small>(20h-22h)</small></h3>
+    <% if Constants::PAROISSE == 'SJDHP' %>
+      <h3>Dîner <br><small>(19h00-22h00)</small></h3>
+    <% else %>
+      <h3>Dîner <br><small>(20h-22h)</small></h3>
+    <% end %>
   </th>
 
   <th class="head-row">
     <h3>Nuit <br><small>(22h30-7h30)</small></h3>
   </th>
 
-  <% unless ENV['MENAGE_DABORD'] == 'true' %>
+  <% unless Constants::PAROISSE == 'SJDHP' %>
     <th class="head-row">
       <h3>Ménage <br><small>(8h45-11h)</small></h3>
     </th>

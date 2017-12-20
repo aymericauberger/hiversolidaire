@@ -3,8 +3,14 @@
   <br>
   <br>
   <% options = ['Décembre 2017', 'Janvier 2018', 'Février 2018'] %>
+  <% if Constants::PAROISSE == 'SJDHP'
+       options.push('Mars 2018')
+     end %>
   <% options.shift if [Date.today, @start_date].max > Date.new(2017, 12, 31) %>
-  <% unless  Date.today > Date.new(2018, 1, 31) %>
+  <% options.shift if [Date.today, @start_date].max > Date.new(2018, 1, 31) %>
+  <% hide_date = Constants::PAROISSE == 'SJDHP' ? Date.new(2018, 2, 28) : Date.new(2018, 1, 31) %>
+
+  <% unless  Date.today > hide_date %>
     <% options.each do |option| %>
       <% if option == params[:month] || params[:month].blank? && l([Date.today, @start_date].max, format: '%B %Y').humanize == option %>
         <span class="visible-xs" style="clear: both; margin: 6px 0;"></span>
