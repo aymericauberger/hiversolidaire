@@ -2,17 +2,15 @@
   <%= render 'shared/table_header', admin: admin %>
 
   <% pair = true %>
-  <% semaine = 0 %>
   <% (@from_date..@to_date).each do |date| %>
     <% if date > Date.today - 2 && date <= Constants::END_DATE %>
 
-      <% if date > @from_date + 2 && l(date, format: '%A') == "lundi" %>
-        <% semaine += 1 %>
+      <% if date > @from_date + 2 && l(date, format: '%A') == "lundi" && date > Date.today %>
         <tr><th><br><br></th></tr>
         <%= render 'shared/table_header', admin: admin %>
       <% end %>
 
-      <tr class="<%= 'pair' if pair %><%= ' red-missing' if date < Date.today + 30 && semaine < 2 %>">
+      <tr class="<%= 'pair' if pair %><%= ' red-missing' if date < Date.today + 15 %>">
         <td class="event-box date-column">
           <%= l(date, format: :long).humanize %>
         </td>

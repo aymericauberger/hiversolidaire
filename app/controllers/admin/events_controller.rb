@@ -67,51 +67,15 @@ module Admin
       # Inscription.destroy_all
       # Event.destroy_all
 
-      # (1..31).each do |i|
-      #   Event.create!(event_type: 'Diner', start_date: Date.new(2017, 12, i))
-      #   Event.create!(event_type: 'Nuit', start_date: Date.new(2017, 12, i))
-      #   Event.create!(
-      #     event_type: 'Petit-dejeuner',
-      #     start_date: Date.new(2017, 12, i)
-      #   )
-      #   if l(Date.new(2017, 12, i), format: '%A') == 'samedi'
-      #     Event.create!(event_type: 'Menage', start_date: Date.new(2017, 12, i))
-      #   end
-      # end
-
-      # (1..31).each do |i|
-      #   Event.create!(event_type: 'Diner', start_date: Date.new(2018, 1, i))
-      #   Event.create!(event_type: 'Nuit', start_date: Date.new(2018, 1, i))
-      #   Event.create!(
-      #     event_type: 'Petit-dejeuner',
-      #     start_date: Date.new(2018, 1, i)
-      #   )
-      #   if l(Date.new(2018, 1, i), format: '%A') == 'samedi'
-      #     Event.create!(event_type: 'Menage', start_date: Date.new(2018, 1, i))
-      #   end
-      # end
-
-      # (1..28).each do |i|
-      #   Event.create!(event_type: 'Diner', start_date: Date.new(2018, 2, i))
-      #   Event.create!(event_type: 'Nuit', start_date: Date.new(2018, 2, i))
-      #   Event.create!(
-      #     event_type: 'Petit-dejeuner',
-      #     start_date: Date.new(2018, 2, i)
-      #   )
-      #   if l(Date.new(2018, 2, i), format: '%A') == 'samedi'
-      #     Event.create!(event_type: 'Menage', start_date: Date.new(2018, 2, i))
-      #   end
-      # end
-
-      (1..15).each do |i|
-        Event.create!(event_type: 'Diner', start_date: Date.new(2018, 3, i))
-        Event.create!(event_type: 'Nuit', start_date: Date.new(2018, 3, i))
-        Event.create!(
+      (Date.new(2018, 2, 17)..Date.new(2018, 3, 18)).each do |date|
+        Event.where(event_type: 'Diner', start_date: date).first_or_create
+        Event.where(event_type: 'Nuit', start_date: date).first_or_create
+        Event.where(
           event_type: 'Petit-dejeuner',
-          start_date: Date.new(2018, 3, i)
-        )
-        if l(Date.new(2018, 3, i), format: '%A') == 'samedi'
-          Event.create!(event_type: 'Menage', start_date: Date.new(2018, 3, i))
+          start_date: date
+        ).first_or_create
+        if l(date, format: '%A') == 'samedi'
+          Event.where(event_type: 'Menage', start_date: date).first_or_create
         end
       end
 

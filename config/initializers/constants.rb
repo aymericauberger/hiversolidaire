@@ -14,6 +14,6 @@ module Constants
   END_DATE = if PAROISSE == 'SJDHP'
                Date.new(2018, 3, 15)
              else
-               Date.new(2018, 2, 16)
+               Date.new(2018, 3, 18)
              end
 end
